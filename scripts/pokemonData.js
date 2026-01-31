@@ -227,7 +227,7 @@ function renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesE
 }
 
 // ===============================
-// RENDER STATS AS BARS
+// RENDER STATS
 // ===============================
 function renderStats(stats, container) {
   container.innerHTML = "";
@@ -235,25 +235,47 @@ function renderStats(stats, container) {
   stats.forEach(stat => {
     const li = document.createElement("li");
     li.className = "stat-row";
+    li.style.display = "flex";
+    li.style.alignItems = "center";
+    li.style.gap = "10px"; // spacing between elements
 
+    // Stat name
     const label = document.createElement("span");
     label.textContent = formatStatName(stat.stat.name);
-    label.className = "stat-label";
+    label.style.fontWeight = "bold";
+    label.style.fontSize = "0.95rem";
+    label.style.width = "100px"; // fixed width for alignment
+    label.style.color = getStatColor(stat.base_stat);
+    label.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`; // softer glow
 
+    // Stat numeric value
+    const value = document.createElement("span");
+    value.textContent = stat.base_stat;
+    value.style.width = "40px";
+    value.style.textAlign = "right";
+    value.style.fontWeight = "bold";
+    value.style.fontSize = "0.95rem";
+    value.style.color = getStatColor(stat.base_stat);
+    value.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`; // softer glow
+
+    // Bar container
     const barContainer = document.createElement("div");
     barContainer.className = "stat-bar-container";
+    barContainer.style.flexGrow = "1"; // make bar take remaining space
 
     const bar = document.createElement("div");
     bar.className = "stat-bar";
     const percent = Math.min((stat.base_stat / 255) * 100, 100);
     bar.style.width = percent + "%";
     bar.style.background = getStatColor(stat.base_stat);
+    bar.style.boxShadow = `0 0 6px ${getStatColor(stat.base_stat)}`; // slightly softer glow
 
     barContainer.appendChild(bar);
-    li.append(label, barContainer);
+    li.append(label, value, barContainer);
     container.appendChild(li);
   });
 }
+
 
 // ===============================
 // RENDER LEARNSET
