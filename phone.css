@@ -3,361 +3,128 @@
 ========================= */
 @media (orientation: portrait) {
 
-    /* =========================
-   ROOT THEME VARIABLES
-    ========================= */
-    :root {
-    --bg-dark: #0b0f1a;
-    --panel-dark: #11162a;
+  html {
+    font-size: 150%; /* 20% larger than desktop/base font size */
+  }
 
-    --accent: rgb(0, 229, 255);
-    --accent-glow: 0 0 12px var(--accent),
-                    0 0 25px var(--accent);
+  /* =========================
+     MAIN LAYOUT
+  ========================= */
+  main {
+    grid-template-columns: 1fr !important; /* force single column */
+    width: 100%;                            /* fill viewport width */
+    min-width: 0;                           /* allow shrinking */
+  }
 
-    --text-main: #e6f1ff;
-    --text-muted: #9aa4c7;
-    }
+  .left,
+  .right {
+    width: 100% !important;  /* override any previous width */
+    min-width: 0;            /* allow shrinking */
+    padding: 0.8rem;
+  }
 
-    /* =========================
-    GLOBAL
-    ========================= */
-    * {
-    box-sizing: border-box;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    }
+  .left img {
+    max-width: 100%;         /* ensure image scales down */
+    height: auto;            /* maintain aspect ratio */
+  }
 
-    body {
-    margin: 0;
-    font-size: 16px; /* bigger for mobile */
-    line-height: 1.5;
-    background: radial-gradient(circle at top, #141a33, var(--bg-dark));
-    color: var(--text-main);
-    }
-
-    /* =========================
-    HEADER
-    ========================= */
-    header {
-    display: flex;
-    flex-direction: column; /* stack inputs for narrow screens */
+  /* =========================
+     HEADER
+  ========================= */
+  header {
+    flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
-    padding: 30px 20px;
-    background: var(--panel-dark);
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.05);
-    }
+    padding: 35px 15px; /* taller header, narrower horizontal */
+    gap: 1.25rem;       /* slightly more spacing between elements */
+  }
 
-    header h1 {
-    font-size: 1.8rem;
-    color: var(--accent);
-    text-shadow: var(--accent-glow);
-    }
-
-    header input,
-    header button {
-    font-size: 1rem;
-    padding: 0.75rem 1.25rem;
-    width: 90%;
-    max-width: 300px;
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    outline: none;
-    text-shadow: var(--accent-glow);
-    }
-
-    /* =========================
-    TABS
-    ========================= */
-    .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    background: #0e1430;
-    gap: 0.25rem;
-    }
-
-    .tab {
-    flex: 1 1 45%;
-    padding: 0.75rem;
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
+  header h1 {
+    font-size: 1.6rem; /* slightly taller heading */
     text-align: center;
-    }
+  }
 
-    .tab.active {
-    color: var(--accent);
-    text-shadow: var(--accent-glow);
-    border-bottom: 2px solid var(--accent);
-    }
-
-    /* =========================
-    MAIN LAYOUT
-    ========================= */
-    main {
-    display: block; /* stack panels vertically */
-    padding: 1rem;
-    }
-
-    .left,
-    .right {
-    width: 100%;
-    margin-bottom: 1rem;
-    background: var(--panel-dark);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: var(--accent-glow);
-    }
-
-    .left img {
-    width: 180px;
-    display: block;
-    margin: 0 auto 1rem;
-    image-rendering: pixelated;
-    }
-
-    /* =========================
-    TAB CONTENT
-    ========================= */
-    .tab-content {
-    display: none;
-    }
-
-    .tab-content.active {
-    display: block;
-    }
-
-    h2 {
-    font-size: 1.3rem;
-    color: var(--accent);
-    text-shadow: var(--accent-glow);
-    }
-
-    p {
-    font-size: 1rem;
-    color: var(--text-muted);
-    }
-
-    .ability {
-    position: relative;
-    cursor: help;
-    background-color: #222;
-    color: var(--accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    display: inline-block;
-    text-shadow: var(--accent-glow);
+  header input,
+  header button {
+    width: 85%; /* slightly narrower than full width */
+    max-width: 280px;
     font-size: 0.95rem;
-    }
+    padding: 0.5rem 1rem; /* slightly taller input/button */
+  }
 
-    /* =========================
-    TYPE LABELS
-    ========================= */
-    .type {
-    display: inline-block;
-    padding: 4px 10px;
-    margin-right: 5px;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: #000;
-    text-shadow: 0 0 5px rgba(255,255,255,0.2);
-    background-color: #222;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-    transition: 0.3s all;
-    }
-
-    .type:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 12px currentColor;
-    }
-
-    /* =========================
-    STATS
-    ========================= */
-    #statsList li {
-    list-style: none;
-    margin-bottom: 0.5rem;
-    padding-left: 0.75rem;
-    border-left: 3px solid var(--accent);
-    }
-
-    .stat-row {
-    display: grid;
-    grid-template-columns: 80px 1fr 40px;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-    }
-
-    .stat-bar-container {
-    height: 12px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    }
-
-    .stat-bar {
-    height: 100%;
-    transition: width 0.6s ease;
-    box-shadow: 0 0 10px currentColor;
-    }
-
-    .stat-value {
-    font-size: 0.9rem;
-    text-align: right;
-    color: var(--text-muted);
-    }
-
-    /* =========================
-    TABLES
-    ========================= */
-    table {
-    width: 100%;
-    border-collapse: collapse;
-    }
-
-    th, td {
-    padding: 0.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    th {
-    color: var(--accent);
-    }
-
-    /* =========================
-    MODAL
-    ========================= */
-    .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
-
-    .hidden {
-    display: none;
-    }
-
-    .modal-content {
-    background: var(--panel-dark);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: var(--accent-glow);
-    text-align: center;
-    }
-
-    /* =========================
-    FOOTER
-    ========================= */
-    footer {
-    text-align: center;
-    padding: 1rem;
-    color: var(--text-muted);
-    }
-
-    /* =========================
-    SEARCH DROPDOWN
-    ========================= */
-    .search-container {
-    position: relative;
+  /* =========================
+     TABS (stacked for portrait)
+  ========================= */
+  .tabs {
+    flex-direction: column; /* stack buttons vertically */
+    align-items: stretch;   /* stretch to container width if needed */
+    gap: 0.5rem;            /* spacing between buttons */
     width: 90%;
-    max-width: 300px;
+    max-width: 280px;
     margin: 0 auto;
-    }
+  }
 
-    #searchSuggestions {
-    position: absolute;
+  .tab {
+    flex: none;           /* do not stretch */
+    width: 100%;          /* full width of container */
+    text-align: center;   /* center text inside buttons */
+    padding: 0.6rem 0;    /* taller touch targets */
+    font-size: 0.95rem;
+  }
+
+  /* =========================
+     SEARCH DROPDOWN
+  ========================= */
+  .search-container {
+    width: 85%;
+    max-width: 280px;
+  }
+
+  #searchSuggestions {
+    max-height: calc(3 * 2.2rem); /* still show ~3 items */
+    overflow-y: auto;
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--panel-dark);
-    border: 2px solid var(--accent);
-    border-radius: 6px;
-    max-height: calc(3 * 2.5rem); /* show 3 items */
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
+    width: 100%;
     box-shadow: var(--accent-glow);
-    transition: top 0.1s ease;
-    }
+  }
 
-    #searchSuggestions .suggestion {
-    font-size: 1rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    padding: 0 12px;
-    cursor: pointer;
-    color: var(--accent);
-    text-shadow: var(--accent-glow);
-    transition: all 0.1s ease-in-out;
-    }
+  #searchSuggestions .suggestion {
+    height: 2.2rem;
+    line-height: 2.2rem;
+    padding: 0 8px;
+  }
 
-    #searchSuggestions .suggestion.highlighted,
-    #searchSuggestions .suggestion:hover {
-    background-color: rgba(0, 229, 255, 0.15);
-    color: #fff;
-    text-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent);
-    }
-
-    #searchSuggestions::-webkit-scrollbar {
-    width: 6px;
-    }
-
-    #searchSuggestions::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 3px;
-    box-shadow: var(--accent-glow);
-    }
-
-    /* =========================
-    GENERATED NAME
-    ========================= */
-    .generated-name {
-    font-size: 1.3rem;
-    margin-top: 12px;
-    color: var(--accent);
-    font-weight: bold;
-    text-shadow: var(--accent-glow);
-    text-align: center;
-    }
-
-    /* =========================
-    TOOLTIP FOR ABILITIES
-    ========================= */
-    .ability[data-tooltip]:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    left: 50%;
-    bottom: 125%;
-    transform: translateX(-50%);
-    background: var(--panel-dark);
-    color: var(--accent);
-    padding: 6px 10px;
-    border-radius: 8px;
-    white-space: pre-wrap;
+  /* =========================
+     GENERATED NAME
+  ========================= */
+  .generated-name {
     font-size: 0.95rem;
+    margin-top: 6px;
     text-align: center;
-    text-shadow: var(--accent-glow);
-    box-shadow: var(--accent-glow);
-    z-index: 100;
-    width: max-content;
-    max-width: 220px;
-    }
+  }
 
-    .ability[data-tooltip]:hover::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 115%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: var(--panel-dark) transparent transparent transparent;
-    z-index: 101;
-    }
+  /* =========================
+     TABLES
+  ========================= */
+  table, th, td {
+    font-size: 0.85rem;
+  }
+
+  /* =========================
+     TOOLTIP / ABILITY
+  ========================= */
+  .ability[data-tooltip]:hover::after {
+    font-size: 0.8rem;
+    max-width: 200px;
+    padding: 4px 8px;
+  }
+
+  /* =========================
+     FOOTER
+  ========================= */
+  footer {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+  }
 }
