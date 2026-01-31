@@ -381,3 +381,49 @@ footer {
   font-size: 1rem;
   text-align: center;
 }
+
+
+/* Tooltip container */
+.ability {
+  position: relative;
+  cursor: help;
+  background-color: #222;
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  text-shadow: var(--accent-glow);
+}
+
+/* Neon tooltip using data-tooltip instead of title */
+.ability[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: 125%;
+  transform: translateX(-50%);
+  background: var(--panel-dark);
+  color: var(--accent);
+  padding: 5px 10px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  font-size: 0.85rem;
+  text-align: center;
+  text-shadow: var(--accent-glow);
+  box-shadow: var(--accent-glow);
+  z-index: 100;
+  width: max-content;
+  max-width: 250px;
+}
+
+.ability[data-tooltip]:hover::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 115%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--panel-dark) transparent transparent transparent;
+  z-index: 101;
+}

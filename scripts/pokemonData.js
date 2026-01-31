@@ -224,12 +224,40 @@ function renderPokemon(data, species, gen, pokemonNameEl, pokemonImgEl, pokemonT
   renderStats(data.stats, statsContainer);
 
   // --- Abilities (updated to match your overview tab) ---
-  const abilitiesEl = document.getElementById("pokemonAbilities"); // overview span
+  const abilitiesEl = document.getElementById("pokemonAbilities");
   if (abilitiesEl) {
-    abilitiesEl.innerHTML = data.abilities
-      .map(a => `<span class="ability">${capitalize(a.ability.name)}</span>`)
-      .join(", ");
+    abilitiesEl.innerHTML = ""; // clear first
+
+    data.abilities.forEach(async (a) => {
+      const abilityName = capitalize(a.ability.name);
+
+      const span = document.createElement("span");
+      span.className = "ability";
+      span.textContent = abilityName;
+
+      // Fetch ability details
+      try {
+        const res = await fetch(a.ability.url);
+        const abilityData = await res.json();
+        const effectEntry = abilityData.effect_entries.find(
+          entry => entry.language.name === "en"
+        );
+
+        // Use data-tooltip instead of title
+        span.dataset.tooltip = effectEntry ? effectEntry.effect : "No description available";
+      } catch (err) {
+        console.error("Ability fetch error:", err);
+        span.dataset.tooltip = "Description unavailable";
+      }
+
+      abilitiesEl.appendChild(span);
+      if (a !== data.abilities[data.abilities.length - 1]) {
+        abilitiesEl.appendChild(document.createTextNode(", "));
+      }
+    });
   }
+
+
 
   // Learnset
   renderLearnset(data.moves, learnsetContainer);
