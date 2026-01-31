@@ -21,36 +21,31 @@ const nameGenButton = document.getElementById("openNameGen");
 const nameOutput = document.getElementById("generatedName");
 
 function generatePokemonName() {
-  const starts = [
-    "ka", "zu", "mi", "ra", "to", "shi", "no", "li",
-    "py", "fi", "dra", "ze", "cha", "lu", "sa", "ve"
-  ];
+  const starts = ["ka", "zu", "mi", "ra", "to", "shi", "no", "li", "py", "fi", "dra", "ze", "cha", "lu", "sa", "ve"];
+  const middles = ["ra", "zu", "mi", "lo", "ka", "shi", "la", "ne", "ri", "do", "ma"];
+  const ends = ["mon", "chu", "lin", "fy", "no", "ra", "tar", "zor", "ling"];
 
-  const middles = [
-    "ra", "zu", "mi", "lo", "ka", "shi", "ven", "tor",
-    "la", "ne", "ri", "do", "ma"
-  ];
+  // Almost always 2-syllable names, sometimes 3
+  let name = starts[Math.floor(Math.random() * starts.length)];
+  if (Math.random() < 0.2) { // 20% chance for middle syllable
+    name += middles[Math.floor(Math.random() * middles.length)];
+  }
+  name += ends[Math.floor(Math.random() * ends.length)];
 
-  const ends = [
-    "mon", "chu", "rex", "dra", "lin", "gon", "fy",
-    "no", "ra", "tar", "zor", "ling", "mite"
-  ];
-
-  let name =
-    starts[Math.floor(Math.random() * starts.length)] +
-    (Math.random() > 0.5
-      ? middles[Math.floor(Math.random() * middles.length)]
-      : "") +
-    ends[Math.floor(Math.random() * ends.length)];
-
-  // Cleanup rules
+  // Cleanup repeated letters
   name = name
     .replace(/aa|ee|ii|oo|uu/g, match => match[0])
     .replace(/kk|zz|rr|tt|ll|ss/g, match => match[0])
     .replace(/(.)\1{2,}/g, "$1$1");
 
+  // Force maximum length of 5-6 letters for really short names
+  if (name.length > 6 && Math.random() < 0.5) {
+    name = name.slice(0, 6);
+  }
+
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
+
 
 // Generate on page load
 document.addEventListener("DOMContentLoaded", () => {
