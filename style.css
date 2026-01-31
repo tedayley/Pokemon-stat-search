@@ -1,0 +1,301 @@
+/* =========================
+   ROOT THEME VARIABLES
+========================= */
+:root {
+  --bg-dark: #0b0f1a;
+  --panel-dark: #11162a;
+
+  --accent: rgb(0, 229, 255);
+  --accent-glow: 0 0 12px var(--accent),
+                 0 0 25px var(--accent);
+
+  --text-main: #e6f1ff;
+  --text-muted: #9aa4c7;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #141a33, var(--bg-dark));
+  color: var(--text-main);
+}
+
+/* =========================
+   HEADER
+========================= */
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 20px 30px; 
+  background: var(--panel-dark);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.05);
+}
+
+header h1 {
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+}
+
+header input,
+header button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  outline: none;
+  text-shadow: var(--accent-glow);
+}
+
+/* =========================
+   TABS
+========================= */
+.tabs {
+  display: flex;
+  background: #0e1430;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tab.active {
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+main {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.left,
+.right {
+  background: var(--panel-dark);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--accent-glow);
+}
+
+.left img {
+  width: 200px;
+  display: block;
+  margin: auto;
+  image-rendering: pixelated;
+}
+
+/* =========================
+   TAB CONTENT
+========================= */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+h2 {
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+}
+
+p {
+  color: var(--text-muted);
+}
+
+.ability {
+  background-color: #222;
+  color: #0ff;
+  padding: 2px 6px;
+  margin-right: 4px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+/* Base style for type labels */
+.type {
+  display: inline-block;
+  padding: 3px 8px;
+  margin-right: 5px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #000; /* black text for readability */
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2); /* subtle glow on text */
+  background-color: #222;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+  transition: 0.3s all;
+}
+
+/* Neon colors for each type */
+.type.fire { background-color: #ff4500; box-shadow: 0 0 10px #ff6347; }
+.type.water { background-color: #1e90ff; box-shadow: 0 0 10px #00bfff; }
+.type.grass { background-color: #32cd32; box-shadow: 0 0 10px #7cfc00; }
+.type.electric { background-color: #ffd700; box-shadow: 0 0 10px #ffff00; }
+.type.ice { background-color: #00ffff; box-shadow: 0 0 10px #7fffd4; }
+.type.fighting { background-color: #8b0000; box-shadow: 0 0 10px #ff0000; }
+.type.poison { background-color: #9400d3; box-shadow: 0 0 10px #9932cc; }
+.type.ground { background-color: #cd853f; box-shadow: 0 0 10px #d2b48c; }
+.type.flying { background-color: #87ceeb; box-shadow: 0 0 10px #00bfff; }
+.type.psychic { background-color: #ff1493; box-shadow: 0 0 10px #ff69b4; }
+.type.bug { background-color: #9acd32; box-shadow: 0 0 10px #adff2f; }
+.type.rock { background-color: #a9a9a9; box-shadow: 0 0 10px #d3d3d3; }
+.type.ghost { background-color: #4b0082; box-shadow: 0 0 10px #8a2be2; }
+.type.dragon { background-color: #006400; box-shadow: 0 0 10px #32cd32; }
+.type.dark { background-color: #2f4f4f; box-shadow: 0 0 10px #708090; }
+.type.steel { background-color: #b0c4de; box-shadow: 0 0 10px #87cefa; }
+.type.fairy { background-color: #ffb6c1; box-shadow: 0 0 10px #ff69b4; }
+.type.normal { background-color: #a8a878; box-shadow: 0 0 10px #dcdcdc; }
+
+/* Hover effect for neon glow */
+.type:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px currentColor;
+}
+
+
+/* =========================
+   STATS
+========================= */
+#statsList li {
+  list-style: none;
+  margin-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
+}
+
+/* =========================
+   TABLES
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+th {
+  color: var(--accent);
+}
+
+/* =========================
+   MODAL
+========================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--panel-dark);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--accent-glow);
+  text-align: center;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-muted);
+}
+
+/* bar graph.*/
+.stat-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 40px;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-bar-container {
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.stat-bar {
+  height: 100%;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.stat-value {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+#suggestions {
+  position: absolute;
+  background: var(--panel-dark);
+  border: 1px solid var(--accent);
+  box-shadow: var(--accent-glow);
+  z-index: 10;
+}
+
+#suggestions div {
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+}
+
+#suggestions div:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+#searchSuggestions {
+  border: 1px solid #aaa;
+  background-color: #111;
+  color: #fff;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.suggestion {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.suggestion.highlight {
+  background-color: #4cafff; /* neon blue highlight */
+  color: #fff;
+}

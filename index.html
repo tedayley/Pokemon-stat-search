@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pokémon Companion</title>
+  <link rel="stylesheet" href="style.css" />
+
+
+</head>
+<body>
+
+<header>
+  <h1>Pokémon Companion</h1>
+  <input id="pokemonSearch" type="text" placeholder="Search Pokémon…" />
+  <div id="searchSuggestions"></div>
+  <button id="openNameGen">🎲 Random Name</button>
+  <select id="genSelect">
+    <option value="latest">Latest Gen</option>
+    <option value="1">Gen 1</option>
+    <option value="2">Gen 2</option>
+    <option value="3">Gen 3</option>
+    <option value="4">Gen 4</option>
+    <option value="5">Gen 5</option>
+    <option value="6">Gen 6</option>
+    <option value="7">Gen 7</option>
+    <option value="8">Gen 8</option>
+    <option value="9">Gen 9</option>
+    </select>
+
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="overview">Overview</button>
+  <button class="tab" data-tab="stats">Stats</button>
+  <button class="tab" data-tab="learnset">Learnset</button>
+  <button class="tab" data-tab="typechart">Type Chart</button>
+  <button class="tab" data-tab="naturechart">Nature Chart</button>
+</nav>
+
+<main>
+  <!-- IMAGE PANEL -->
+  <section class="left">
+    <img id="pokemonImage" alt="Pokémon image" />
+  </section>
+
+  <!-- INFO PANEL -->
+  <section class="right">
+
+    <div id="overview" class="tab-content active">
+      <h2 id="pokemonName">—</h2>
+      <p><strong>Dex #:</strong> <span id="dexNumber"></span></p>
+      <p><strong>Type:</strong> <span id="pokemonTypes"></span></p>
+      <p><strong>Abilities:</strong> <span id="pokemonAbilities"></span></p>
+      <p id="flavorText"></p>
+    </div>
+
+    <div id="stats" class="tab-content">
+      <h2>Base Stats</h2>
+      <ul id="statsList"></ul>
+    </div>
+
+    <div id="learnset" class="tab-content">
+      <h2>Learnset (Level-Up)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Move</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody id="learnsetTable"></tbody>
+      </table>
+    </div>
+
+    <div id="typechart" class="tab-content">
+      <h2>Type Chart</h2>
+      <img src="images/type.png" alt="Type chart" />
+    </div>
+
+    <div id="naturechart" class="tab-content">
+      <h2>Nature Chart</h2>
+      <img src="images/nature.png" alt="Nature chart" />
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <p>Powered by PokéAPI</p>
+</footer>
+  <!-- Scripts -->
+  <script defer src="scripts/pokemonData.js"></script>
+  <script defer src="scripts/script.js"></script>
+  <script defer src="scripts/themePulse.js"></script>
+</body>
+</html>
