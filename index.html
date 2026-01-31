@@ -11,10 +11,20 @@
 
 <header>
   <h1>Pokémon Companion</h1>
-  <input id="pokemonSearch" type="text" placeholder="Search Pokémon…" />
-  <div id="searchSuggestions"></div>
-  <button id="openNameGen">Generate Name</button>
-  <p id="generatedName" class="generated-name"></p>
+  <div class="search-container">
+    <input
+      type="text"
+      id="pokemonSearch"
+      placeholder="Search Pokémon..."
+      autocomplete="off"
+    />
+    <div id="searchSuggestions" class="suggestions"></div>
+  </div>
+  <div class="name-generator">
+    <button id="openNameGen">Generate Name</button>
+    <div id="generatedName" class="generated-name"></div>
+  </div>
+
   <select id="genSelect">
     <option value="latest">Latest Gen</option>
     <option value="1">Gen 1</option>

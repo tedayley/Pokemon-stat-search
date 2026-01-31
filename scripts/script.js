@@ -43,7 +43,7 @@ function generatePokemonName() {
       : "") +
     ends[Math.floor(Math.random() * ends.length)];
 
-  // Cleanup rules (prevents ugly names)
+  // Cleanup rules
   name = name
     .replace(/aa|ee|ii|oo|uu/g, match => match[0])
     .replace(/kk|zz|rr|tt|ll|ss/g, match => match[0])
@@ -52,9 +52,15 @@ function generatePokemonName() {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+// Generate on page load
+document.addEventListener("DOMContentLoaded", () => {
+  nameOutput.textContent = `Random Pokémon Name: ${generatePokemonName()}`;
+});
+
 nameGenButton.addEventListener("click", () => {
   nameOutput.textContent = `Random Pokémon Name: ${generatePokemonName()}`;
 });
+
 
 
 

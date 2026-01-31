@@ -56,30 +56,132 @@ function setupGenerationFilter(genSelect) {
 // SEARCH + AUTOCOMPLETE
 // ===============================
 function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer, genSelect) {
-  searchInput.addEventListener("input", async () => {
+  let selectedIndex = -1; // tracks arrow key selection
+
+  // Position dropdown above input if near bottom of viewport
+  function positionDropdown() {
+    const rect = searchInput.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const dropdownHeight = suggestionsBox.offsetHeight;
+
+    if (dropdownHeight > spaceBelow && spaceBelow < 200) {
+      // Not enough space below, show above
+      suggestionsBox.style.top = `-${dropdownHeight + 2}px`; // +2px for border
+    } else {
+      // Enough space below, show normally
+      suggestionsBox.style.top = "100%";
+    }
+  }
+
+  // Highlight selected suggestion
+  function updateHighlight(items, index) {
+    items.forEach((item, i) => {
+      if (i === index) item.classList.add("highlighted");
+      else item.classList.remove("highlighted");
+    });
+  }
+
+  // Handle selecting a suggestion
+  function selectSuggestion(name) {
+    searchInput.value = capitalize(name);
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none";
+    loadPokemon(
+      name,
+      genSelect.value,
+      pokemonNameEl,
+      pokemonImgEl,
+      pokemonTypesEl,
+      statsContainer,
+      learnsetContainer
+    );
+  }
+
+  // Input event: filter suggestions
+  searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
     suggestionsBox.innerHTML = "";
+    selectedIndex = -1;
 
-    if (!query) return;
+    if (!query) {
+      suggestionsBox.style.display = "none";
+      return;
+    }
 
-    // Show up to 8 matches
     const matches = pokemonCache
       .filter(name => name.includes(query))
       .slice(0, 8);
 
-    for (const name of matches) {
+    if (matches.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
+    }
+
+    matches.forEach((name, index) => {
       const div = document.createElement("div");
       div.className = "suggestion";
       div.textContent = capitalize(name);
-      div.onclick = () => {
-        searchInput.value = name;
-        suggestionsBox.innerHTML = "";
-        loadPokemon(name, genSelect.value, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
-      };
+      div.dataset.index = index;
+
+      div.addEventListener("click", () => {
+        selectSuggestion(name);
+      });
+
       suggestionsBox.appendChild(div);
+    });
+
+    suggestionsBox.style.display = "block";
+
+    // Adjust dropdown position
+    positionDropdown();
+  });
+
+  // Arrow key navigation + Enter
+  searchInput.addEventListener("keydown", (e) => {
+    const items = suggestionsBox.querySelectorAll(".suggestion");
+    if (items.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateHighlight(items, selectedIndex);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateHighlight(items, selectedIndex);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        selectSuggestion(items[selectedIndex].textContent);
+      } else if (searchInput.value.trim() !== "") {
+        // fallback: search what’s typed if no selection
+        loadPokemon(
+          searchInput.value.toLowerCase(),
+          genSelect.value,
+          pokemonNameEl,
+          pokemonImgEl,
+          pokemonTypesEl,
+          statsContainer,
+          learnsetContainer
+        );
+        suggestionsBox.style.display = "none";
+      }
     }
   });
+
+  // Click outside to hide suggestions
+  document.addEventListener("click", (e) => {
+    if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+      suggestionsBox.style.display = "none";
+    }
+  });
+
+  // Reposition dropdown on window resize/scroll
+  window.addEventListener("resize", positionDropdown);
+  window.addEventListener("scroll", positionDropdown);
 }
+
+
 
 // ===============================
 // LOAD POKÉMON DATA FROM API
