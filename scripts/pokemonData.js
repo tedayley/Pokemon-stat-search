@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // DOM Elements
   const searchInput = document.getElementById("pokemonSearch");
   const suggestionsBox = document.getElementById("searchSuggestions");
-  const genSelect = document.getElementById("genSelect");
 
   const pokemonNameEl = document.getElementById("pokemonName");
   const pokemonImgEl = document.getElementById("pokemonImage");
@@ -25,13 +24,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadPokemonList();
 
   // Setup search autocomplete
-  setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer, genSelect);
-
-  // Setup generation filter
-  setupGenerationFilter(genSelect);
+  setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
 
   // Load default Pokémon
-  loadPokemon("bulbasaur", genSelect.value, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+  loadPokemon("bulbasaur", pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
 });
 
 // ===============================
@@ -44,18 +40,9 @@ async function loadPokemonList() {
 }
 
 // ===============================
-// GENERATION FILTER
-// ===============================
-function setupGenerationFilter(genSelect) {
-  genSelect.addEventListener("change", () => {
-    // Nothing needed here yet, generation is passed to loadPokemon
-  });
-}
-
-// ===============================
 // SEARCH + AUTOCOMPLETE
 // ===============================
-function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer, genSelect) {
+function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   let selectedIndex = -1; // tracks arrow key selection
 
   // Position dropdown above input if near bottom of viewport
@@ -65,10 +52,8 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
     const dropdownHeight = suggestionsBox.offsetHeight;
 
     if (dropdownHeight > spaceBelow && spaceBelow < 200) {
-      // Not enough space below, show above
-      suggestionsBox.style.top = `-${dropdownHeight + 2}px`; // +2px for border
+      suggestionsBox.style.top = `-${dropdownHeight + 2}px`;
     } else {
-      // Enough space below, show normally
       suggestionsBox.style.top = "100%";
     }
   }
@@ -86,15 +71,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
     searchInput.value = capitalize(name);
     suggestionsBox.innerHTML = "";
     suggestionsBox.style.display = "none";
-    loadPokemon(
-      name,
-      genSelect.value,
-      pokemonNameEl,
-      pokemonImgEl,
-      pokemonTypesEl,
-      statsContainer,
-      learnsetContainer
-    );
+    loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
   }
 
   // Input event: filter suggestions
@@ -123,16 +100,12 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
       div.textContent = capitalize(name);
       div.dataset.index = index;
 
-      div.addEventListener("click", () => {
-        selectSuggestion(name);
-      });
+      div.addEventListener("click", () => selectSuggestion(name));
 
       suggestionsBox.appendChild(div);
     });
 
     suggestionsBox.style.display = "block";
-
-    // Adjust dropdown position
     positionDropdown();
   });
 
@@ -154,16 +127,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
       if (selectedIndex >= 0 && selectedIndex < items.length) {
         selectSuggestion(items[selectedIndex].textContent);
       } else if (searchInput.value.trim() !== "") {
-        // fallback: search what’s typed if no selection
-        loadPokemon(
-          searchInput.value.toLowerCase(),
-          genSelect.value,
-          pokemonNameEl,
-          pokemonImgEl,
-          pokemonTypesEl,
-          statsContainer,
-          learnsetContainer
-        );
+        loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
         suggestionsBox.style.display = "none";
       }
     }
@@ -181,22 +145,19 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
   window.addEventListener("scroll", positionDropdown);
 }
 
-
-
 // ===============================
 // LOAD POKÉMON DATA FROM API
 // ===============================
-async function loadPokemon(name, gen, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+async function loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   try {
     const response = await fetch(`${API_BASE}/pokemon/${name.toLowerCase()}`);
     if (!response.ok) throw new Error("Pokémon not found");
     const data = await response.json();
 
-    // Load species for flavor text (filtered by generation if possible)
     const speciesRes = await fetch(`${API_BASE}/pokemon-species/${data.id}`);
     const species = await speciesRes.json();
 
-    renderPokemon(data, species, gen, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+    renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
   } catch (err) {
     alert("Pokémon not found");
     console.error(err);
@@ -206,7 +167,7 @@ async function loadPokemon(name, gen, pokemonNameEl, pokemonImgEl, pokemonTypesE
 // ===============================
 // RENDER POKÉMON
 // ===============================
-function renderPokemon(data, species, gen, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+function renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   // Name & image
   pokemonNameEl.textContent = capitalize(data.name);
   pokemonImgEl.src = data.sprites.other["official-artwork"].front_default;
@@ -223,27 +184,20 @@ function renderPokemon(data, species, gen, pokemonNameEl, pokemonImgEl, pokemonT
   // Stats
   renderStats(data.stats, statsContainer);
 
-  // --- Abilities (updated to match your overview tab) ---
+  // Abilities
   const abilitiesEl = document.getElementById("pokemonAbilities");
   if (abilitiesEl) {
-    abilitiesEl.innerHTML = ""; // clear first
-
+    abilitiesEl.innerHTML = "";
     data.abilities.forEach(async (a) => {
       const abilityName = capitalize(a.ability.name);
-
       const span = document.createElement("span");
       span.className = "ability";
       span.textContent = abilityName;
 
-      // Fetch ability details
       try {
         const res = await fetch(a.ability.url);
         const abilityData = await res.json();
-        const effectEntry = abilityData.effect_entries.find(
-          entry => entry.language.name === "en"
-        );
-
-        // Use data-tooltip instead of title
+        const effectEntry = abilityData.effect_entries.find(entry => entry.language.name === "en");
         span.dataset.tooltip = effectEntry ? effectEntry.effect : "No description available";
       } catch (err) {
         console.error("Ability fetch error:", err);
@@ -257,12 +211,10 @@ function renderPokemon(data, species, gen, pokemonNameEl, pokemonImgEl, pokemonT
     });
   }
 
-
-
   // Learnset
   renderLearnset(data.moves, learnsetContainer);
 
-  // Flavor text (basic)
+  // Flavor text
   const flavor = species.flavor_text_entries.find(e => e.language.name === "en");
   const flavorTextEl = document.getElementById("flavorText");
   if (flavorTextEl) flavorTextEl.textContent = flavor ? flavor.flavor_text.replace(/\f/g, " ") : "";
