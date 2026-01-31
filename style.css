@@ -427,3 +427,37 @@ footer {
   border-color: var(--panel-dark) transparent transparent transparent;
   z-index: 101;
 }
+
+/* =========================
+   NEON GEN SELECT
+========================= */
+#genSelect {
+  background: var(--panel-dark); /* dropdown background is slightly dark */
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-shadow: var(--accent-glow);
+  box-shadow: var(--accent-glow);
+  cursor: pointer;
+  outline: none;
+
+  appearance: none; /* hide native arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+#genSelect:focus {
+  box-shadow: 0 0 12px var(--accent), 0 0 25px var(--accent);
+}
+
+#genSelect option {
+  background: var(--panel-dark); /* works in some browsers */
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+}
+

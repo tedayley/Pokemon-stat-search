@@ -4,7 +4,7 @@
 @media (orientation: portrait) {
 
   html {
-    font-size: 150%; /* 20% larger than desktop/base font size */
+    font-size: 200%; /* 20% larger than desktop/base font size */
   }
 
   /* =========================
