@@ -61,10 +61,16 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
   // Highlight selected suggestion
   function updateHighlight(items, index) {
     items.forEach((item, i) => {
-      if (i === index) item.classList.add("highlighted");
-      else item.classList.remove("highlighted");
+      if (i === index) {
+        item.classList.add("highlighted");
+        // Scroll the highlighted item into view
+        item.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      } else {
+        item.classList.remove("highlighted");
+      }
     });
   }
+
 
   // Handle selecting a suggestion
   function selectSuggestion(name) {
