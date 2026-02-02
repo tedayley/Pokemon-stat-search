@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // DOM Elements
   const searchInput = document.getElementById("pokemonSearch");
   const suggestionsBox = document.getElementById("searchSuggestions");
-
+  const pokemonDexEl = document.getElementById("dexNumber");
   const pokemonNameEl = document.getElementById("pokemonName");
   const pokemonImgEl = document.getElementById("pokemonImage");
   const pokemonTypesEl = document.getElementById("pokemonTypes");
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadPokemonList();
 
   // Setup search autocomplete
-  setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+  setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
 
   // Load default Pokémon
-  loadPokemon("bulbasaur", pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+  loadPokemon("bulbasaur", pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
 });
 
 // ===============================
@@ -42,7 +42,7 @@ async function loadPokemonList() {
 // ===============================
 // SEARCH + AUTOCOMPLETE
 // ===============================
-function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   let selectedIndex = -1; // tracks arrow key selection
 
   // Position dropdown above input if near bottom of viewport
@@ -77,7 +77,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
     searchInput.value = capitalize(name);
     suggestionsBox.innerHTML = "";
     suggestionsBox.style.display = "none";
-    loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+    loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
   }
 
   // Input event: filter suggestions
@@ -133,7 +133,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
       if (selectedIndex >= 0 && selectedIndex < items.length) {
         selectSuggestion(items[selectedIndex].textContent);
       } else if (searchInput.value.trim() !== "") {
-        loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+        loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
         suggestionsBox.style.display = "none";
       }
     }
@@ -154,7 +154,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonImgEl, p
 // ===============================
 // LOAD POKÉMON DATA FROM API
 // ===============================
-async function loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   try {
     const response = await fetch(`${API_BASE}/pokemon/${name.toLowerCase()}`);
     if (!response.ok) throw new Error("Pokémon not found");
@@ -163,7 +163,7 @@ async function loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, st
     const speciesRes = await fetch(`${API_BASE}/pokemon-species/${data.id}`);
     const species = await speciesRes.json();
 
-    renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+    renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
   } catch (err) {
     alert("Pokémon not found");
     console.error(err);
@@ -173,7 +173,7 @@ async function loadPokemon(name, pokemonNameEl, pokemonImgEl, pokemonTypesEl, st
 // ===============================
 // RENDER POKÉMON
 // ===============================
-function renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   // Name & image
   pokemonNameEl.textContent = capitalize(data.name);
   pokemonImgEl.src = data.sprites.other["official-artwork"].front_default;
@@ -186,6 +186,16 @@ function renderPokemon(data, species, pokemonNameEl, pokemonImgEl, pokemonTypesE
     span.textContent = capitalize(t.type.name);
     pokemonTypesEl.appendChild(span);
   });
+
+  // Type effectiveness calculator
+  const pokemonTypes = data.types.map(t => t.type.name);
+  renderTypeCalculator(pokemonTypes);
+
+
+  if (pokemonDexEl) {
+    pokemonDexEl.textContent = `#${data.id.toString().padStart(4, "0")}`;
+  }
+
 
   // Stats
   renderStats(data.stats, statsContainer);

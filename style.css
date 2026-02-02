@@ -428,36 +428,211 @@ footer {
   z-index: 101;
 }
 
+
 /* =========================
-   NEON GEN SELECT
+   TYPE EFFECTIVENESS CALCULATOR
 ========================= */
-#genSelect {
-  background: var(--panel-dark); /* dropdown background is slightly dark */
-  border: 2px solid var(--accent);
+
+#calculator {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.25);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+#calculator h3 {
   color: var(--accent);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  text-shadow: var(--accent-glow);
+  margin-bottom: 0.75rem;
+}
+
+.type-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.type-label {
+  min-width: 90px;
   font-weight: bold;
-  text-shadow: var(--accent-glow);
-  box-shadow: var(--accent-glow);
-  cursor: pointer;
-  outline: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 
-  appearance: none; /* hide native arrow */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-#genSelect:focus {
-  box-shadow: 0 0 12px var(--accent), 0 0 25px var(--accent);
-}
-
-#genSelect option {
-  background: var(--panel-dark); /* works in some browsers */
   color: var(--accent);
   text-shadow: var(--accent-glow);
+
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
+.type-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Category color accents (semantic via data-level) */
+.type-row[data-level="quad"] .type-label {
+  color: #ff3b3b;
+  text-shadow: 0 0 8px #ff3b3b;
+}
+
+.type-row[data-level="weak"] .type-label {
+  color: #ff9800;
+  text-shadow: 0 0 8px #ff9800;
+}
+
+.type-row[data-level="neutral"] .type-label {
+  color: var(--text-muted);
+  text-shadow: none;
+}
+
+.type-row[data-level="resist"] .type-label {
+  color: #4cff4c;
+  text-shadow: 0 0 8px #4cff4c;
+}
+
+.type-row[data-level="quad-resist"] .type-label {
+  color: #32cdff;
+  text-shadow: 0 0 8px #32cdff;
+}
+
+.type-row[data-level="immune"] .type-label {
+  color: #b84cff;
+  text-shadow: 0 0 8px #b84cff;
+}
+
+/* Entry animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   TYPE COLORS (for chips)
+========================= */
+
+/* Neon colors for each type */
+.type.fire    { background-color: #ff4500; box-shadow: 0 0 10px #ff6347; color: #000; }
+.type.water   { background-color: #1e90ff; box-shadow: 0 0 10px #00bfff; color: #000; }
+.type.grass   { background-color: #32cd32; box-shadow: 0 0 10px #7cfc00; color: #000; }
+.type.electric{ background-color: #ffd700; box-shadow: 0 0 10px #ffff00; color: #000; }
+.type.ice     { background-color: #00ffff; box-shadow: 0 0 10px #7fffd4; color: #000; }
+.type.fighting{ background-color: #8b0000; box-shadow: 0 0 10px #ff0000; color: #000; }
+.type.poison  { background-color: #9400d3; box-shadow: 0 0 10px #9932cc; color: #000; }
+.type.ground  { background-color: #cd853f; box-shadow: 0 0 10px #d2b48c; color: #000; }
+.type.flying  { background-color: #87ceeb; box-shadow: 0 0 10px #00bfff; color: #000; }
+.type.psychic { background-color: #ff1493; box-shadow: 0 0 10px #ff69b4; color: #000; }
+.type.bug     { background-color: #9acd32; box-shadow: 0 0 10px #adff2f; color: #000; }
+.type.rock    { background-color: #a9a9a9; box-shadow: 0 0 10px #d3d3d3; color: #000; }
+.type.ghost   { background-color: #4b0082; box-shadow: 0 0 10px #8a2be2; color: #000; }
+.type.dragon  { background-color: #00c853; box-shadow: 0 0 12px #00ff7f; color: #000; }
+.type.dark    { background-color: #2f4f4f; box-shadow: 0 0 10px #708090; color: #000; }
+.type.steel   { background-color: #b0c4de; box-shadow: 0 0 10px #87cefa; color: #000; }
+.type.fairy   { background-color: #ffb6c1; box-shadow: 0 0 10px #ff69b4; color: #000; }
+.type.normal  { background-color: #a8a878; box-shadow: 0 0 10px #dcdcdc; color: #000; }
+
+/* Hover effect for neon glow (chips) */
+.type:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Dragon type with extra neon flair */
+.type.dragon {
+  background: linear-gradient(45deg, #00ff00, #00ffff); /* bright green to cyan gradient */
+  color: #000000; /* white text for contrast */
+  text-shadow: 0 0 6px #00ff00, 0 0 12px #00ffff; /* layered glow */
+  box-shadow: 0 0 12px #00ff00, 0 0 18px #00ffff inset; /* outer + inner neon glow */
+  border: 1px solid #0ff; /* subtle neon border for definition */
+  transition: 0.3s all;
+}
+
+/* Hover effect for extra pop */
+.type.dragon:hover {
+  transform: scale(1.15);
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ffff;
+  box-shadow: 0 0 16px #00ff00, 0 0 28px #00ffff inset;
+}
+
+
+/* =========================
+   NATURE CHART
+========================= */
+#naturechart {
+  padding: 20px;
+  background: var(--panel-dark);
+  overflow-x: auto; /* allow scrolling if table is too wide */
+}
+
+.neon-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+}
+
+.neon-table th,
+.neon-table td {
+  border: 1px solid var(--accent);
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  color: black; /* black letters inside neon glow */
+  text-shadow: var(--accent-glow);
+  transition: all 0.3s ease;
+}
+
+/* Table header styling */
+.neon-table th {
+  background: #111111;
+}
+
+/* Hover effect for rows */
+.neon-table tr:hover td {
+  background: #001f1f;
+  text-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent);
+}
+
+/* Thrumming effect applied to each cell */
+.neon-table td.thrumming {
+  animation: thrumming 2s infinite alternate;
+}
+
+/* Neutral natures diagonal styling */
+.neon-table td.neutral {
+  background: #0a0a0a;
+  border-color: #555555;
+  text-shadow: 0 0 5px #aaaaaa;
+}
+
+/* Thrumming keyframes (pulse effect) */
+@keyframes thrumming {
+  0% {
+    box-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent);
+  }
+}
+
+/* Responsive table for small screens */
+@media (max-width: 768px) {
+  .neon-table th,
+  .neon-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
