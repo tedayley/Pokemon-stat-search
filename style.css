@@ -117,6 +117,7 @@ main {
 h2 {
   color: var(--accent);
   text-shadow: var(--accent-glow);
+  animation: thrumming 2s infinite alternate;
 }
 
 p {
@@ -583,13 +584,13 @@ footer {
 
 .neon-table th,
 .neon-table td {
-  border: 1px solid var(--accent);
+  border: 2px solid var(--accent);
   padding: 12px;
   text-align: center;
   font-weight: bold;
   color: black; /* black letters inside neon glow */
   text-shadow: var(--accent-glow);
-  transition: all 0.3s ease;
+  transition: all 0.7s ease;
 }
 
 /* Table header styling */
@@ -611,8 +612,8 @@ footer {
 /* Neutral natures diagonal styling */
 .neon-table td.neutral {
   background: #0a0a0a;
-  border-color: #555555;
-  text-shadow: 0 0 5px #aaaaaa;
+  border-color: #292929;
+  text-shadow: 0 0 7px #aaaaaa;
 }
 
 /* Thrumming keyframes (pulse effect) */
@@ -624,7 +625,7 @@ footer {
     box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
   }
   100% {
-    box-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent);
+    box-shadow: 0 0 7px var(--accent), 0 0 15px var(--accent);
   }
 }
 
