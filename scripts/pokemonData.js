@@ -230,6 +230,12 @@ function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl,
   // Learnset
   renderLearnset(data.moves, learnsetContainer);
 
+  // Other moves
+  const otherMovesContainer = document.getElementById("otherMovesTable");
+  if (otherMovesContainer) {
+    renderOtherMoves(data.moves, otherMovesContainer);
+  }
+
   // Flavor text
   const flavor = species.flavor_text_entries.find(e => e.language.name === "en");
   const flavorTextEl = document.getElementById("flavorText");
@@ -296,16 +302,96 @@ function renderLearnset(moves, container) {
     .map(m => {
       const levelUp = m.version_group_details.find(d => d.move_learn_method.name === "level-up");
       if (!levelUp) return null;
-      return { name: m.move.name, level: levelUp.level_learned_at };
+      return { name: m.move.name, level: levelUp.level_learned_at, url: m.move.url};
     })
     .filter(Boolean)
     .sort((a, b) => a.level - b.level)
     .forEach(m => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${m.level}</td><td>${capitalize(m.name)}</td><td>—</td>`;
+      const levelTd = document.createElement("td");
+      levelTd.textContent = m.level;
+      levelTd.classList.add("move-level");
+
+      const moveTd = document.createElement("td");
+      moveTd.textContent = capitalize(m.name);
+      moveTd.classList.add("move-name");
+      attachMoveTooltip(moveTd, m.url);
+
+      row.append(levelTd, moveTd);
+
       container.appendChild(row);
     });
 }
+
+// ===============================
+// RENDER MoveSET
+// ===============================
+function renderOtherMoves(moves, container) {
+  container.innerHTML = "";
+
+  const seen = new Set();
+
+  moves.forEach(m => {
+    m.version_group_details.forEach(d => {
+      if (d.move_learn_method.name === "level-up") return;
+
+      const key = `${m.move.name}-${d.move_learn_method.name}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+
+      const row = document.createElement("tr");
+
+      // Learn method
+      const methodTd = document.createElement("td");
+      methodTd.textContent = capitalize(
+        d.move_learn_method.name.replace("-", " ")
+      );
+      methodTd.classList.add("move-method");
+
+      // Move name
+      const moveTd = document.createElement("td");
+      moveTd.textContent = capitalize(m.move.name);
+      moveTd.classList.add("move-name");
+
+      // Tooltip hookup
+      attachMoveTooltip(moveTd, m.move.url);
+
+      row.append(methodTd, moveTd);
+      container.appendChild(row);
+    });
+  });
+}
+
+
+// ===============================
+// Hover moves
+// ===============================
+async function attachMoveTooltip(cell, moveUrl) {
+  try {
+    const res = await fetch(moveUrl);
+    const moveData = await res.json();
+
+    const effect = moveData.effect_entries.find(
+      e => e.language.name === "en"
+    );
+
+    const power = moveData.power ?? "—";
+    const accuracy = moveData.accuracy ?? "—";
+    const type = capitalize(moveData.type.name);
+
+    cell.dataset.tooltip = `
+${type} type
+Power: ${power}
+Accuracy: ${accuracy}
+
+${effect ? effect.short_effect : "No description available."}
+    `.trim();
+  } catch (err) {
+    console.error("Move tooltip error:", err);
+    cell.dataset.tooltip = "Move data unavailable.";
+  }
+}
+
 
 // ===============================
 // UTILITIES
