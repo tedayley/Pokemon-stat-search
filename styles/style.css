@@ -843,3 +843,64 @@ tbody tr:hover {
 
   transition: transform 0.15s ease, box-shadow 0.15s ease, text-shadow 0.15s ease;
 }
+
+
+.neon-button {
+  background: rgba(0, 0, 0, 0.8);
+  color: #000;
+  border: 2px solid #00f0ff;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  text-shadow:
+    0 0 4px #00f0ff,
+    0 0 8px #00f0ff,
+    0 0 12px #00f0ff,
+    0 0 16px #ff00ff,
+    0 0 20px #ff00ff;
+
+  box-shadow:
+    0 0 6px #00f0ff,
+    0 0 12px #00f0ff,
+    0 0 18px #ff00ff,
+    inset 0 0 6px #00f0ff;
+
+  animation: neonPulse 2.5s infinite alternate;
+}
+
+/* Hover effect */
+.neon-button:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 12px #00f0ff,
+    0 0 24px #00f0ff,
+    0 0 36px #ff00ff,
+    inset 0 0 10px #ff00ff;
+}
+
+/* Click effect */
+.neon-button:active {
+  transform: scale(0.95);
+}
+
+/* Glow animation */
+@keyframes neonPulse {
+  from {
+    box-shadow:
+      0 0 6px #00f0ff,
+      0 0 12px #00f0ff,
+      0 0 18px #ff00ff,
+      inset 0 0 6px #00f0ff;
+  }
+  to {
+    box-shadow:
+      0 0 14px #00f0ff,
+      0 0 28px #00f0ff,
+      0 0 40px #ff00ff,
+      inset 0 0 12px #ff00ff;
+  }
+}
