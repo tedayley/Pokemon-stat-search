@@ -904,3 +904,268 @@ tbody tr:hover {
       inset 0 0 12px #ff00ff;
   }
 }
+
+/* ============================= */
+/* DEX NAV NEON STYLE */
+/* ============================= */
+
+.dex-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+  margin: 10px 0;
+}
+
+/* Arrow Buttons */
+.dex-arrow {
+  background: #111;
+  border: 1px solid var(--accent);
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: var(--accent-glow);
+}
+
+.dex-arrow:hover {
+  transform: scale(1.08);
+}
+
+.dex-arrow:active {
+  transform: scale(0.95);
+}
+
+/* Dex Number */
+.dex-number {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 1rem;
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+  animation: thrumming 2s infinite alternate;
+}
+
+/* ============================= */
+/* FORMS SECTION */
+/* ============================= */
+
+#pokemonForms {
+  height: 50px;      /* Reserved space */
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+/* Form Buttons */
+.form-button {
+  background: #111;
+  border: 1px solid var(--accent);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: var(--accent-glow);
+}
+
+.form-button:hover {
+  transform: scale(1.05);
+}
+
+.form-button.active-form {
+  border-color: #ff00ff;
+  box-shadow: 0 0 12px #ff00ff;
+}
+
+/* Optional: Give Forms Same Thrumming Glow As Headings */
+#pokemonForms,
+.dex-number {
+  animation: thrumming 2s infinite alternate;
+}
+
+/* ============================= */
+/* DEX NAV — ENHANCED NEON */
+/* ============================= */
+
+.dex-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: nowrap;
+  margin: 12px 0;
+}
+
+/* ================= */
+/* ARROW BUTTONS */
+/* ================= */
+
+.dex-arrow {
+  background: #0f0f0f;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 6px 16px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 6px var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow pulse animation */
+.dex-arrow {
+  animation: arrowPulse 3s infinite alternate;
+}
+
+/* Hover effect */
+.dex-arrow:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 14px var(--accent), 0 0 6px #ffffff55;
+}
+
+/* Click effect */
+.dex-arrow:active {
+  transform: scale(0.9);
+}
+
+/* Subtle animated glow sweep */
+.dex-arrow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.2),
+    transparent
+  );
+  transition: 0.4s;
+}
+
+.dex-arrow:hover::after {
+  left: 100%;
+}
+
+/* ================= */
+/* DEX NUMBER TEXT */
+/* ================= */
+
+.dex-number {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 1.05rem;
+  color: var(--accent);
+  text-shadow: var(--accent-glow);
+  letter-spacing: 1px;
+  position: relative;
+}
+
+/* Shimmer animation */
+.dex-number {
+  animation: textShimmer 4s infinite alternate;
+}
+
+/* ================= */
+/* ANIMATIONS */
+/* ================= */
+
+@keyframes arrowPulse {
+  0% {
+    box-shadow: 0 0 4px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 16px var(--accent), 0 0 6px #ff00ff;
+  }
+}
+
+@keyframes textShimmer {
+  0% {
+    text-shadow: 0 0 4px var(--accent);
+  }
+  100% {
+    text-shadow: 0 0 14px var(--accent), 0 0 4px #ffffff55;
+  }
+}
+
+.neon-button {
+  background: #111;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--accent-glow);
+  transition: all 0.2s ease;
+}
+
+.neon-button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 14px var(--accent), 0 0 6px #fff;
+}
+
+.neon-button:active {
+  transform: scale(0.95);
+}
+
+/* Neon glowing text for variants */
+.neon-text {
+  background: #000;
+  border: 1px solid var(--accent);
+
+  color: #ffffff; /* White = best readability */
+
+  letter-spacing: 1px;
+
+  /* Neon outline effect */
+  -webkit-text-stroke: 0.4px var(--accent);
+
+  text-shadow:
+    0 0 4px var(--accent),
+    0 0 8px var(--accent);
+
+  box-shadow:
+    0 0 6px var(--accent),
+    inset 0 0 4px var(--accent);
+
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.neon-text:hover {
+  box-shadow:
+    0 0 14px var(--accent),
+    0 0 20px var(--accent);
+
+  transform: scale(1.05);
+}
+
+/* Active */
+.neon-text.active-form {
+  border-color: #ff00ff;
+
+  -webkit-text-stroke: 0.5px #ff00ff;
+
+  text-shadow:
+    0 0 6px #ff00ff,
+    0 0 14px #ff00ff;
+
+  box-shadow:
+    0 0 16px #ff00ff,
+    0 0 26px #ff00ff;
+}

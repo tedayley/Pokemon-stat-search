@@ -32,7 +32,6 @@
   <button class="tab" data-tab="learnset">Learnset</button>
   <button class="tab" data-tab="typechart">Type Chart</button>
   <button class="tab" data-tab="naturechart">Nature Chart</button>
-  <button class="neon-button" onclick="getRandomFox()">Get New Fox</button>
 </nav>
 
 <main>
@@ -46,7 +45,17 @@
 
     <div id="overview" class="tab-content active">
       <h2 id="pokemonName">—</h2>
-      <p><strong>Dex #:</strong> <span id="dexNumber"></span></p>
+      <div id="pokemonForms"></div>
+      <div class="dex-wrapper">
+        <button id="prevDex" class="dex-arrow">◀</button>
+
+        <div class="dex-number">
+          Dex #:
+          <span id="dexNumber"></span>
+        </div>
+
+        <button id="nextDex" class="dex-arrow">▶</button>
+      </div>
       <p><strong>Type:</strong> <span id="pokemonTypes"></span></p>
       <p><strong>Abilities:</strong> <span id="pokemonAbilities"></span></p>
       <p id="flavorText"></p>
@@ -104,7 +113,5 @@
   <script defer src="scripts/themePulse.js"></script>
   <script defer src="scripts/typechart.js"></script>
   <script defer src="scripts/nature.js"></script>
-  <script defer src="scripts/footer.js"></script>
-  <script defer src="scripts/fox.js"></script>
 </body>
 </html>

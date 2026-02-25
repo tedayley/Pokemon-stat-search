@@ -19,15 +19,43 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pokemonTypesEl = document.getElementById("pokemonTypes");
   const statsContainer = document.getElementById("statsList");
   const learnsetContainer = document.getElementById("learnsetTable");
+  const prevBtn = document.getElementById("prevDex");
+  const nextBtn = document.getElementById("nextDex");
 
   // Load Pokémon list for autocomplete
   await loadPokemonList();
 
-  // Setup search autocomplete
-  setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+  // Setup search
+  setupSearch(
+    searchInput,
+    suggestionsBox,
+    pokemonNameEl,
+    pokemonDexEl,
+    pokemonImgEl,
+    pokemonTypesEl,
+    statsContainer,
+    learnsetContainer
+  );
 
   // Load default Pokémon
-  loadPokemon("bulbasaur", pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+  loadPokemon(
+    "bulbasaur",
+    pokemonNameEl,
+    pokemonDexEl,
+    pokemonImgEl,
+    pokemonTypesEl,
+    statsContainer,
+    learnsetContainer
+  );
+
+  // ✅ ADD NAV LISTENERS HERE
+  prevBtn?.addEventListener("click", () => {
+    navigateDex(-1);
+  });
+
+  nextBtn?.addEventListener("click", () => {
+    navigateDex(1);
+  });
 });
 
 // ===============================
@@ -160,7 +188,7 @@ async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, poke
     if (!response.ok) throw new Error("Pokémon not found");
     const data = await response.json();
 
-    const speciesRes = await fetch(`${API_BASE}/pokemon-species/${data.id}`);
+    const speciesRes = await fetch(data.species.url);
     const species = await speciesRes.json();
 
     renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
@@ -170,6 +198,46 @@ async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, poke
   }
 }
 
+async function navigateDex(direction) {
+  const dexText = document.getElementById("dexNumber");
+  if (!dexText) return;
+
+  const current = parseInt(dexText.textContent.replace("#", "")) || 1;
+  const newDex = current + direction;
+
+  if (newDex < 1) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/pokemon/${newDex}`);
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const speciesRes = await fetch(data.species.url);
+    const species = await speciesRes.json();
+
+    const pokemonNameEl = document.getElementById("pokemonName");
+    const pokemonImgEl = document.getElementById("pokemonImage");
+    const pokemonTypesEl = document.getElementById("pokemonTypes");
+    const statsContainer = document.getElementById("statsList");
+    const learnsetContainer = document.getElementById("learnsetTable");
+
+    renderPokemon(
+      data,
+      species,
+      pokemonNameEl,
+      dexText,
+      pokemonImgEl,
+      pokemonTypesEl,
+      statsContainer,
+      learnsetContainer
+    );
+
+  } catch (err) {
+    console.error("Dex navigation error:", err);
+  }
+}
+
+
 // ===============================
 // RENDER POKÉMON
 // ===============================
@@ -177,6 +245,43 @@ function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl,
   // Name & image
   pokemonNameEl.textContent = capitalize(data.name);
   pokemonImgEl.src = data.sprites.other["official-artwork"].front_default;
+
+  // ===============================
+  // RENDER FORMS
+  // ===============================
+  const formsContainer = document.getElementById("pokemonForms");
+
+  if (formsContainer && species.varieties.length > 1) {
+    formsContainer.innerHTML = "";
+
+    species.varieties.forEach(v => {
+      const btn = document.createElement("button");
+      btn.classList.add("form-button", "neon-text");
+
+      // Clean up name display
+      btn.textContent = capitalize(
+        v.pokemon.name
+          .replace(species.name + "-", "")
+          .replace(species.name, "Normal")
+      );
+
+      btn.addEventListener("click", () => {
+        loadPokemon(
+          v.pokemon.name,
+          pokemonNameEl,
+          pokemonDexEl,
+          pokemonImgEl,
+          pokemonTypesEl,
+          statsContainer,
+          learnsetContainer
+        );
+      });
+
+      formsContainer.appendChild(btn);
+    });
+  } else if (formsContainer) {
+    formsContainer.innerHTML = "";
+  }
 
   // Types
   pokemonTypesEl.innerHTML = "";
