@@ -59,12 +59,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ===============================
-// LOAD POKÉMON LIST FOR AUTOCOMPLETE
+// LOAD POKÉMON LIST FOR AUTOCOMPLETE (Future-Proof)
 // ===============================
 async function loadPokemonList() {
-  const response = await fetch(`${API_BASE}/pokemon?limit=1025`);
-  const data = await response.json();
-  pokemonCache = data.results.map(p => p.name);
+  try {
+    // Step 1: Get total species count
+    const metaResponse = await fetch(`${API_BASE}/pokemon-species?limit=1`);
+    const metaData = await metaResponse.json();
+
+    const totalSpecies = metaData.count;
+
+    // Step 2: Fetch all species using dynamic count
+    const response = await fetch(
+      `${API_BASE}/pokemon-species?limit=${totalSpecies}`
+    );
+
+    const data = await response.json();
+
+    // Step 3: Store names in cache
+    pokemonCache = data.results.map(p => p.name);
+
+  } catch (err) {
+    console.error("Failed to load Pokémon list:", err);
+  }
 }
 
 // ===============================
@@ -184,14 +201,41 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
 // ===============================
 async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   try {
+    let data;
+    let species;
+
+    // First attempt: direct pokemon fetch
     const response = await fetch(`${API_BASE}/pokemon/${name.toLowerCase()}`);
-    if (!response.ok) throw new Error("Pokémon not found");
-    const data = await response.json();
 
-    const speciesRes = await fetch(data.species.url);
-    const species = await speciesRes.json();
+    if (response.ok) {
+      data = await response.json();
 
-    renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+      const speciesRes = await fetch(data.species.url);
+      species = await speciesRes.json();
+    } else {
+      // Fallback: try species endpoint
+      const speciesRes = await fetch(`${API_BASE}/pokemon-species/${name.toLowerCase()}`);
+      if (!speciesRes.ok) throw new Error("Pokémon not found");
+
+      species = await speciesRes.json();
+
+      // Load default form from species
+      const defaultVariety = species.varieties.find(v => v.is_default);
+      const pokemonRes = await fetch(defaultVariety.pokemon.url);
+      data = await pokemonRes.json();
+    }
+
+    renderPokemon(
+      data,
+      species,
+      pokemonNameEl,
+      pokemonDexEl,
+      pokemonImgEl,
+      pokemonTypesEl,
+      statsContainer,
+      learnsetContainer
+    );
+
   } catch (err) {
     alert("Pokémon not found");
     console.error(err);
