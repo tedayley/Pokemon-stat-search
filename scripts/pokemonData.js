@@ -479,6 +479,7 @@ function renderOtherMoves(moves, container) {
   container.innerHTML = "";
 
   const seen = new Set();
+  const collected = [];
 
   moves.forEach(m => {
     m.version_group_details.forEach(d => {
@@ -488,57 +489,106 @@ function renderOtherMoves(moves, container) {
       if (seen.has(key)) return;
       seen.add(key);
 
-      const row = document.createElement("tr");
-
-      // Learn method
-      const methodTd = document.createElement("td");
-      methodTd.textContent = capitalize(
-        d.move_learn_method.name.replace("-", " ")
-      );
-      methodTd.classList.add("move-method");
-
-      // Move name
-      const moveTd = document.createElement("td");
-      moveTd.textContent = capitalize(m.move.name);
-      moveTd.classList.add("move-name");
-
-      // Tooltip hookup
-      attachMoveTooltip(moveTd, m.move.url);
-
-      row.append(methodTd, moveTd);
-      container.appendChild(row);
+      collected.push({
+        method: d.move_learn_method.name,
+        moveName: m.move.name,
+        moveUrl: m.move.url
+      });
     });
   });
-}
 
+  // Sort alphabetically by method first, then move name
+  collected.sort((a, b) => {
+    if (a.method !== b.method) {
+      return a.method.localeCompare(b.method);
+    }
+    return a.moveName.localeCompare(b.moveName);
+  });
+
+  // Render after sorting
+  collected.forEach(entry => {
+    const row = document.createElement("tr");
+
+    const methodTd = document.createElement("td");
+    methodTd.textContent = capitalize(
+      entry.method.replace("-", " ")
+    );
+    methodTd.classList.add("move-method");
+
+    const moveTd = document.createElement("td");
+    moveTd.textContent = capitalize(entry.moveName);
+    moveTd.classList.add("move-name");
+
+    attachMoveTooltip(moveTd, entry.moveUrl);
+
+    row.append(methodTd, moveTd);
+    container.appendChild(row);
+  });
+}
 
 // ===============================
 // Hover moves
 // ===============================
 async function attachMoveTooltip(cell, moveUrl) {
-  try {
-    const res = await fetch(moveUrl);
-    const moveData = await res.json();
+  cell.addEventListener("mouseenter", async () => {
+    try {
+      cell.dataset.tooltip = "Loading...";
 
-    const effect = moveData.effect_entries.find(
-      e => e.language.name === "en"
-    );
+      const res = await fetch(moveUrl);
+      const moveData = await res.json();
 
-    const power = moveData.power ?? "—";
-    const accuracy = moveData.accuracy ?? "—";
-    const type = capitalize(moveData.type.name);
+      const power = moveData.power ?? "—";
+      const accuracy = moveData.accuracy ?? "—";
+      const type = capitalize(moveData.type?.name ?? "unknown");
+      const damageClass = capitalize(
+        moveData.damage_class?.name ?? "status"
+      );
 
-    cell.dataset.tooltip = `
-${type} type
+      // -----------------------------
+      // Get English Effect Text
+      // -----------------------------
+      const effectEntry = moveData.effect_entries?.find(
+        e => e.language.name === "en"
+      );
+
+      let description =
+        effectEntry?.effect ||
+        effectEntry?.short_effect ||
+        "No description available.";
+
+      // -----------------------------
+      // Replace ALL effect chance placeholders
+      // Handles:
+      // $effect_chance$
+      // $effect_chance%
+      // $effect_chance$%
+      // -----------------------------
+      description = description.replace(
+        /\$effect_chance\$?%?/g,
+        moveData.effect_chance != null
+          ? `${moveData.effect_chance}%`
+          : ""
+      );
+
+      // Clean up extra spaces left behind
+      description = description.replace(/\s{2,}/g, " ").trim();
+
+      // -----------------------------
+      // Build Tooltip
+      // -----------------------------
+      cell.dataset.tooltip = `
+${type} | ${damageClass}
 Power: ${power}
 Accuracy: ${accuracy}
 
-${effect ? effect.short_effect : "No description available."}
-    `.trim();
-  } catch (err) {
-    console.error("Move tooltip error:", err);
-    cell.dataset.tooltip = "Move data unavailable.";
-  }
+${description}
+      `.trim();
+
+    } catch (err) {
+      console.error("Tooltip error:", err);
+      cell.dataset.tooltip = "Move data unavailable.";
+    }
+  });
 }
 
 
