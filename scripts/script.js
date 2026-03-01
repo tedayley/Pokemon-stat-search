@@ -21,27 +21,55 @@ const nameGenButton = document.getElementById("openNameGen");
 const nameOutput = document.getElementById("generatedName");
 
 function generatePokemonName() {
-  const starts = ["ka", "zu", "mi", "ra", "to", "shi", "no", "li", "py", "fi", "dra", "ze", "cha", "lu", "sa", "ve"];
-  const middles = ["ra", "zu", "mi", "lo", "ka", "shi", "la", "ne", "ri", "do", "ma"];
-  const ends = ["mon", "chu", "lin", "fy", "no", "ra", "tar", "zor", "ling"];
+  const starts = [
+    "ka", "zu", "mi", "ra", "to", "shi", "no", "li", "py", "fi",
+    "dra", "ze", "cha", "lu", "sa", "ve", "tri", "mo", "glu",
+    "e", "pha", "ny", "u", "a"
+  ];
 
-  // Almost always 2-syllable names, sometimes 3
-  let name = starts[Math.floor(Math.random() * starts.length)];
-  if (Math.random() < 0.2) { // 20% chance for middle syllable
-    name += middles[Math.floor(Math.random() * middles.length)];
+  const middles = [
+    "ra", "zu", "mi", "lo", "ka", "shi", "la", "ne", "ri", "do",
+    "ma", "ta", "vi", "xo", "ni", "ga"
+  ];
+
+  const ends = [
+    "mon", "chu", "lin", "fy", "no", "ra", "tar", "zor",
+    "ling", "gon", "rex", "dle", "bit", "mite"
+  ];
+
+  function random(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
-  name += ends[Math.floor(Math.random() * ends.length)];
 
-  // Cleanup repeated letters
-  name = name
-    .replace(/aa|ee|ii|oo|uu/g, match => match[0])
-    .replace(/kk|zz|rr|tt|ll|ss/g, match => match[0])
-    .replace(/(.)\1{2,}/g, "$1$1");
+  let name = "";
 
-  // Force maximum length of 5-6 letters for really short names
-  if (name.length > 6 && Math.random() < 0.5) {
-    name = name.slice(0, 6);
+  const isLegendary = Math.random() < 0.05;
+
+  if (isLegendary) {
+    name = random(starts) + random(middles) + random(middles) + random(ends);
+  } else {
+    name = random(starts);
+
+    if (Math.random() < 0.5) {
+      name += random(middles);
+    }
+
+    name += random(ends);
   }
+
+  // Clean repeated vowels
+  name = name.replace(/([aeiou])\1+/g, "$1");
+
+  // Prevent extreme consonant stacking
+  name = name.replace(/([^aeiou])\1{2,}/g, "$1$1");
+
+  // 🔥 Hard cap at 8 letters
+  if (name.length > 8) {
+    name = name.slice(0, 8);
+  }
+
+  // Ensure we don't end mid-consonant cluster after slicing
+  name = name.replace(/[^aeiou]{3,}$/i, "");
 
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
