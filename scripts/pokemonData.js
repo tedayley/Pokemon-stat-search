@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pokemonDexEl = document.getElementById("dexNumber");
   const pokemonNameEl = document.getElementById("pokemonName");
   const pokemonImgEl = document.getElementById("pokemonImage");
+  const pokemonShinyImgEl = document.getElementById("pokemonShinyImage");
   const pokemonTypesEl = document.getElementById("pokemonTypes");
   const statsContainer = document.getElementById("statsList");
   const learnsetContainer = document.getElementById("learnsetTable");
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     pokemonNameEl,
     pokemonDexEl,
     pokemonImgEl,
+    pokemonShinyImgEl,
     pokemonTypesEl,
     statsContainer,
     learnsetContainer
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     pokemonNameEl,
     pokemonDexEl,
     pokemonImgEl,
+    pokemonShinyImgEl,
     pokemonTypesEl,
     statsContainer,
     learnsetContainer
@@ -91,7 +94,7 @@ function normalizeName(name) {
 // ===============================
 // SEARCH + AUTOCOMPLETE
 // ===============================
-function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonShinyImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   let selectedIndex = -1; // tracks arrow key selection
 
   // Position dropdown above input if near bottom of viewport
@@ -126,7 +129,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
     searchInput.value = capitalize(name);
     suggestionsBox.innerHTML = "";
     suggestionsBox.style.display = "none";
-    loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+    loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonShinyImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
   }
 
   // Input event: filter suggestions
@@ -186,7 +189,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
       if (selectedIndex >= 0 && selectedIndex < items.length) {
         selectSuggestion(items[selectedIndex].dataset.name);
       } else if (searchInput.value.trim() !== "") {
-        loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
+        loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonShinyImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
         suggestionsBox.style.display = "none";
       }
     }
@@ -207,7 +210,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
 // ===============================
 // LOAD POKÉMON DATA FROM API
 // ===============================
-async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonShinyImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   try {
     let data;
     let species;
@@ -239,6 +242,7 @@ async function loadPokemon(name, pokemonNameEl, pokemonDexEl, pokemonImgEl, poke
       pokemonNameEl,
       pokemonDexEl,
       pokemonImgEl,
+      pokemonShinyImgEl,
       pokemonTypesEl,
       statsContainer,
       learnsetContainer
@@ -269,6 +273,7 @@ async function navigateDex(direction) {
 
     const pokemonNameEl = document.getElementById("pokemonName");
     const pokemonImgEl = document.getElementById("pokemonImage");
+    const pokemonShinyImgEl = document.getElementById("pokemonShinyImage");
     const pokemonTypesEl = document.getElementById("pokemonTypes");
     const statsContainer = document.getElementById("statsList");
     const learnsetContainer = document.getElementById("learnsetTable");
@@ -277,6 +282,7 @@ async function navigateDex(direction) {
       data,
       species,
       pokemonNameEl,
+      pokemonShinyImgEl,
       dexText,
       pokemonImgEl,
       pokemonTypesEl,
@@ -293,10 +299,11 @@ async function navigateDex(direction) {
 // ===============================
 // RENDER POKÉMON
 // ===============================
-function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
+function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonShinyImgEl, pokemonTypesEl, statsContainer, learnsetContainer) {
   // Name & image
   pokemonNameEl.textContent = capitalize(data.name);
   pokemonImgEl.src = data.sprites.other["official-artwork"].front_default;
+  pokemonShinyImgEl.src = data.sprites.other["official-artwork"].front_shiny;
 
   // ===============================
   // RENDER FORMS
@@ -323,6 +330,7 @@ function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl,
           pokemonNameEl,
           pokemonDexEl,
           pokemonImgEl,
+          pokemonShinyImgEl,
           pokemonTypesEl,
           statsContainer,
           learnsetContainer
