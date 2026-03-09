@@ -84,6 +84,10 @@ async function loadPokemonList() {
   }
 }
 
+function normalizeName(name) {
+  return name.toLowerCase().replace(/[\s-]/g, "");
+}
+
 // ===============================
 // SEARCH + AUTOCOMPLETE
 // ===============================
@@ -137,7 +141,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
     }
 
     const matches = pokemonCache
-      .filter(name => name.includes(query))
+      .filter(name => normalizeName(name).includes(normalizeName(query)))
       .slice(0, 8);
 
     if (matches.length === 0) {
@@ -148,8 +152,12 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
     matches.forEach((name, index) => {
       const div = document.createElement("div");
       div.className = "suggestion";
-      div.textContent = capitalize(name);
+
+      const displayName = name.replace(/-/g, " ");
+      div.textContent = capitalize(displayName);
+
       div.dataset.index = index;
+      div.dataset.name = name; // store real API name
 
       div.addEventListener("click", () => selectSuggestion(name));
 
@@ -176,7 +184,7 @@ function setupSearch(searchInput, suggestionsBox, pokemonNameEl, pokemonDexEl, p
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (selectedIndex >= 0 && selectedIndex < items.length) {
-        selectSuggestion(items[selectedIndex].textContent);
+        selectSuggestion(items[selectedIndex].dataset.name);
       } else if (searchInput.value.trim() !== "") {
         loadPokemon(searchInput.value.toLowerCase(), pokemonNameEl, pokemonDexEl, pokemonImgEl, pokemonTypesEl, statsContainer, learnsetContainer);
         suggestionsBox.style.display = "none";
