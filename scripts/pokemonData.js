@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Load default Pokémon
   loadPokemon(
-    "bulbasaur",
+    "zorua",
     pokemonNameEl,
     pokemonDexEl,
     pokemonImgEl,
