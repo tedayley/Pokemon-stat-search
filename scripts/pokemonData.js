@@ -413,23 +413,25 @@ function renderPokemon(data, species, pokemonNameEl, pokemonDexEl, pokemonImgEl,
 function renderStats(stats, container) {
   container.innerHTML = "";
 
+  let total = 0;
+
   stats.forEach(stat => {
+    total += stat.base_stat; // accumulate total
+
     const li = document.createElement("li");
     li.className = "stat-row";
     li.style.display = "flex";
     li.style.alignItems = "center";
-    li.style.gap = "10px"; // spacing between elements
+    li.style.gap = "10px";
 
-    // Stat name
     const label = document.createElement("span");
     label.textContent = formatStatName(stat.stat.name);
     label.style.fontWeight = "bold";
     label.style.fontSize = "0.95rem";
-    label.style.width = "100px"; // fixed width for alignment
+    label.style.width = "100px";
     label.style.color = getStatColor(stat.base_stat);
-    label.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`; // softer glow
+    label.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`;
 
-    // Stat numeric value
     const value = document.createElement("span");
     value.textContent = stat.base_stat;
     value.style.width = "40px";
@@ -437,24 +439,75 @@ function renderStats(stats, container) {
     value.style.fontWeight = "bold";
     value.style.fontSize = "0.95rem";
     value.style.color = getStatColor(stat.base_stat);
-    value.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`; // softer glow
+    value.style.textShadow = `0 0 1px ${getStatColor(stat.base_stat)}, 0 0 1px ${getStatColor(stat.base_stat)}`;
 
-    // Bar container
     const barContainer = document.createElement("div");
     barContainer.className = "stat-bar-container";
-    barContainer.style.flexGrow = "1"; // make bar take remaining space
+    barContainer.style.flexGrow = "1";
 
     const bar = document.createElement("div");
     bar.className = "stat-bar";
     const percent = Math.min((stat.base_stat / 255) * 100, 100);
     bar.style.width = percent + "%";
     bar.style.background = getStatColor(stat.base_stat);
-    bar.style.boxShadow = `0 0 6px ${getStatColor(stat.base_stat)}`; // slightly softer glow
+    bar.style.boxShadow = `0 0 6px ${getStatColor(stat.base_stat)}`;
 
     barContainer.appendChild(bar);
     li.append(label, value, barContainer);
     container.appendChild(li);
   });
+
+  //BST Total
+  const MAX_BST = 720;
+
+  // Normalize total to a 0–255 scale for coloring
+  const normalized = (total / 6);
+  const bstColor = getStatColor(normalized);
+
+  // Row
+  const totalLi = document.createElement("li");
+  totalLi.className = "stat-row";
+  totalLi.style.display = "flex";
+  totalLi.style.alignItems = "center";
+  totalLi.style.gap = "10px";
+  totalLi.style.marginTop = "8px";
+  totalLi.style.borderTop = "1px solid rgba(255,255,255,0.2)";
+  totalLi.style.paddingTop = "6px";
+
+  // Label
+  const totalLabel = document.createElement("span");
+  totalLabel.textContent = "Base Stat Total";
+  totalLabel.style.fontWeight = "bold";
+  totalLabel.style.width = "100px";
+  totalLabel.style.color = bstColor;
+  totalLabel.style.textShadow = `0 0 1px ${bstColor}, 0 0 1px ${bstColor}`;
+
+  // Value
+  const totalValue = document.createElement("span");
+  totalValue.textContent = total;
+  totalValue.style.width = "40px";
+  totalValue.style.textAlign = "right";
+  totalValue.style.fontWeight = "bold";
+  totalValue.style.color = bstColor;
+  totalValue.style.textShadow = `0 0 1px ${bstColor}, 0 0 1px ${bstColor}`;
+
+  // Bar container
+  const totalBarContainer = document.createElement("div");
+  totalBarContainer.className = "stat-bar-container";
+  totalBarContainer.style.flexGrow = "1";
+
+  // Bar
+  const totalBar = document.createElement("div");
+  totalBar.className = "stat-bar";
+  const totalPercent = Math.min((total / MAX_BST) * 100, 100);
+  totalBar.style.width = totalPercent + "%";
+  totalBar.style.background = bstColor;
+  totalBar.style.boxShadow = `0 0 6px ${bstColor}`;
+
+  // Assemble
+  totalBarContainer.appendChild(totalBar);
+  totalLi.append(totalLabel, totalValue, totalBarContainer);
+  container.appendChild(totalLi);
 }
 
 
