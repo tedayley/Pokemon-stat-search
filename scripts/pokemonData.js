@@ -461,7 +461,7 @@ function renderStats(stats, container) {
   const MAX_BST = 720;
 
   // Normalize total to a 0–255 scale for coloring
-  const normalized = (total / 6);
+  const normalized = (total / 6) * 1.2;
   const bstColor = getStatColor(normalized);
 
   // Row
